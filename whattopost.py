@@ -27,8 +27,10 @@ f.saveImages()
 paths=f.getPaths()
 
 for path in paths:
+	print("analizando imagen: " + path)
 	# la convierto
 	imgcv = cv2.imread(path)
+	f.erasePhoto(path)
 	# se la paso a YOLO
 	results = tfnet.return_predict(imgcv)
 	# guardo el resultado
@@ -37,4 +39,4 @@ for path in paths:
 		#Actualizado por Lautaro
 		registro.updateRecords(result['label'])
 
-f.erasePhoto(path)
+
