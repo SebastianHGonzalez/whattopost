@@ -23,11 +23,13 @@ class PhotoAdmin:
 
 			self._photoPaths.append(path)
 
-	#Erase file in given path.
+	#Erases file in given path.
 	def erasePhoto(self,path):
 		os.remove(path)
 
 
+	#Connects with Flickr API,gets n number of random photos and saves id and url from each photo.
+	# 0 < n =< 500
 	def getPhotosFromFlickr(self, amount):
 		#Setting keys
 		FLICKR_PUBLIC = '066a9fcaede67bc720f66f75ed20a970'
@@ -35,26 +37,36 @@ class PhotoAdmin:
 
 		#Connecting to flickrAPI
 		flickr = FlickrAPI(FLICKR_PUBLIC, FLICKR_SECRET, format='parsed-json')
-		extras='url_c'
+		extras='url_c, url_sq, url_t, url_s, url_q, url_n, url_z, url_l'
 
 		#Searching random photos.
 		randomPhotos = flickr.photos.getRecent(per_page=amount,extras=extras)
 		photos = randomPhotos['photos']
 		photos= photos['photo'] 
 
-		#Handling data.
+		#Handling data and saving data.
 		for photo in photos:
 
 			id = photo[u'id']
-			url = photo[u'url_c']
+			url= self.getUrlFromPhoto(photo)
 
-			favs = flickr.photos.getFavorites(photo_id=id)	#?
-			data = favs['photo']							#?
-			numFavs = data[u'total']						#?
-
-			photoInfo = PhotoInfo(id,url,numFavs)
+			
+			photoInfo = PhotoInfo(id,url)
 
 			self._photosInfo.append(photoInfo)
+
+	#Gets url from photo and returns it. 
+	def getUrlFromPhoto(self,photo):
+
+		extras = ['url_c', 'url_sq', 'url_t', 'url_s', 'url_q', 'url_n', 'url_z', 'url_l']
+
+		for i in extras:
+			if(i in photo):
+				print(i)
+				url=photo[i]
+				break
+
+		return(url)
 
 	def getPhotosInfo(self):
 		return self._photosInfo
@@ -62,20 +74,3 @@ class PhotoAdmin:
 	def getPaths(self):
 		return self._photoPaths
 
-'''
-#----------------
-
-pa = PhotoAdimin()
-pa.getPhotosFromFlickr()
-pprint(pa.getPhotosInfo())
-
-#----
-
-pa.saveImages()
-
-
-#pa.erasePhoto('/home/camila/Desktop/Imagenes/img0.jpg')
-
-#handlear resultado del yolo. 
-
-'''
