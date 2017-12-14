@@ -4,12 +4,12 @@ import logging
 
 class SqlManager:
 
-    def configure(self, host, user, psw, db):
+    def configure(self, host, user, psw, _db):
         self.cnx = mysql.connector.connect(host=host,
                              user=user,
                              passwd=psw,
-                             db=db)
-        self.createTableIfNot(db)
+                             db=_db)
+        self.createTableIfNot(_db)
 
     def createTableIfNot(self, db):
         cursor = self.cnx.cursor()
