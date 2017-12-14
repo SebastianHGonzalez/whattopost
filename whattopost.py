@@ -6,7 +6,6 @@ import getpass
 import PhotoAdmin
 
 server = input('Ingrese el server de base de datos ')
-#Se checkea q los inputs de conexion son validos
 usr = input('Ingrese usuario ')
 psw = getpass.getpass('Ingrese password ')
 db = input('Ingrese una base de datos ')
@@ -18,9 +17,8 @@ options = {"model": "cfg/yolo.cfg", "load": "bin/yolo.weights", "threshold": 0.5
 
 tfnet = TFNet(options)
 
-#Agregado por Lautaro
 registro = sqlManager.SqlManager()
-registro.configure(server, usr, psw, bd)
+registro.configure(server, usr, psw, db)
 
 f = PhotoAdmin.PhotoAdmin()
 f.getPhotosFromFlickr(amountPics)
@@ -29,13 +27,9 @@ paths=f.getPaths()
 
 for path in paths:
 	print("analizando imagen: " + path)
-	# la convierto
 	imgcv = cv2.imread(path)
 	f.erasePhoto(path)
-	# se la paso a YOLO
 	results = tfnet.return_predict(imgcv)
-	# guardo el resultado
 	for result in results:
 
-		#Actualizado por Lautaro
 		registro.updateRecords(result['label'])
