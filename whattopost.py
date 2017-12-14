@@ -1,4 +1,4 @@
-from darkflow.net.build import TFNet	
+from darkflow.net.build import TFNet
 import cv2
 #Agregado por Lautaro
 import sqlManager
@@ -9,6 +9,7 @@ server = input('Ingrese el server de base de datos ')
 #Se checkea q los inputs de conexion son validos
 usr = input('Ingrese usuario ')
 psw = getpass.getpass('Ingrese password ')
+db = input('Ingrese una base de datos ')
 
 amountPics = input('Cuantas fotos desea analizar? ')
 amountPics = int(amountPics)
@@ -19,7 +20,7 @@ tfnet = TFNet(options)
 
 #Agregado por Lautaro
 registro = sqlManager.SqlManager()
-registro.configure(server, usr, psw, "PictureData")
+registro.configure(server, usr, psw, bd)
 
 f = PhotoAdmin.PhotoAdmin()
 f.getPhotosFromFlickr(amountPics)
@@ -38,5 +39,3 @@ for path in paths:
 
 		#Actualizado por Lautaro
 		registro.updateRecords(result['label'])
-
-
